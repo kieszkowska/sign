@@ -16,12 +16,12 @@ export default class ExampleComponent extends Component {
         x: 0,
         y: 0,
       },
-    }
+    };
     this.canvas = React.createRef();
 
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleStart = this.handleStart.bind(this);
+    this.handleMove = this.handleMove.bind(this);
+    this.handleStop = this.handleStop.bind(this);
     this.renderCanvas = this.renderCanvas.bind(this);
     this.start = this.start.bind(this);
   }
@@ -40,34 +40,38 @@ export default class ExampleComponent extends Component {
     this.canvas.current.width = this.canvas.current.width;
   }
 
-  handleMouseDown(e) {
+  handleStart(e) {
     this.setState({
       ...this.state,
       drawing: true,
-      lastPos: this.getMousePos(e),
+      lastPos: this.getPos(e),
+      mousePos: this.getPos(e),
     });
   }
 
-  handleMouseUp(e) {
+  handleMove(e) {
+    this.setState({
+      ...this.state,
+      mousePos: this.getPos(e),
+    });
+  }
+
+  handleStop(e) {
     this.setState({
       ...this.state,
       drawing: false,
-      lastPos: this.getMousePos(e),
+      lastPos: this.getPos(e),
     });
   }
 
-  handleMouseMove(e) {
-    this.setState({
-      ...this.state,
-      mousePos: this.getMousePos(e),
-    })
-  }
-
-  getMousePos(mouseEvent) {
+  getPos(event) {
     let rect = this.canvas.current.getBoundingClientRect();
+    let x = event.touches && event.touches[0] ? event.touches[0].clientX : event.clientX;
+    let y = event.touches && event.touches[0] ? event.touches[0].clientY : event.clientY;
+
     return {
-      x: mouseEvent.clientX - rect.left,
-      y: mouseEvent.clientY - rect.top
+      x: x - rect.left,
+      y: y - rect.top,
     };
   }
 
@@ -90,7 +94,14 @@ export default class ExampleComponent extends Component {
 
   render() {
     return (
-      <canvas ref={this.canvas} onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp}/>
+      <canvas ref={this.canvas}
+              onMouseDown={this.handleStart}
+              onMouseMove={this.handleMove}
+              onMouseUp={this.handleStop}
+              onTouchStart={this.handleStart}
+              onTouchMove={this.handleMove}
+              onTouchEnd={this.handleStop}
+      />
     )
   }
 }
