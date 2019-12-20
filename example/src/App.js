@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 
-import ExampleComponent from 'sign'
+import ReactSign from 'sign'
 
 export default class App extends Component {
   render () {
     return (
       <div>
-        <ExampleComponent text='Modern React component module' />
+        <ReactSign width={600}
+                   height={200}
+                   strokeStyle={'black'}
+                   lineWith={1}
+        />
       </div>
     )
   }

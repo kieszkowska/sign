@@ -1,8 +1,23 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './styles.css';
 
-export default class ExampleComponent extends Component {
+export default class ReactSign extends Component {
+  static propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number,
+    strokeStyle: PropTypes.string,
+    lineWith: PropTypes.number,
+  }
+
+  static defaultProps = {
+    width: 300,
+    height: 100,
+    strokeStyle: "rgb(13, 71, 161)",
+    lineWith: 2,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,14 +45,17 @@ export default class ExampleComponent extends Component {
     this.setState({
       ...this.state,
       ctx: this.canvas.current.getContext('2d'),
+    }, () => {
+      this.clearCanvas();
+      this.start();
     });
-    this.clearCanvas();
-    this.start();
   }
 
   clearCanvas() {
     // noinspection SillyAssignmentJS
     this.canvas.current.width = this.canvas.current.width;
+    this.state.ctx.strokeStyle = this.props.strokeStyle;
+    this.state.ctx.lineWidth = this.props.lineWith;
   }
 
   handleStart(e) {
@@ -94,13 +112,16 @@ export default class ExampleComponent extends Component {
 
   render() {
     return (
-      <canvas ref={this.canvas}
+      <canvas id="react-sign-canvas"
+              ref={this.canvas}
               onMouseDown={this.handleStart}
               onMouseMove={this.handleMove}
               onMouseUp={this.handleStop}
               onTouchStart={this.handleStart}
               onTouchMove={this.handleMove}
               onTouchEnd={this.handleStop}
+              width={this.props.width}
+              height={this.props.height}
       />
     )
   }

@@ -1,6 +1,8 @@
 /* add css styles here (optional) */
 
 canvas {
-  border: 1px solid black;
   margin: 20px;
+  border: 2px dotted #CCCCCC;
+  border-radius: 5px;
+  cursor: crosshair;
 }
